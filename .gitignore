@@ -1,4 +1,5 @@
 .idea
+/app/*.db3
 /app/config/parameters.yml
 /build/
 /phpunit.xml
