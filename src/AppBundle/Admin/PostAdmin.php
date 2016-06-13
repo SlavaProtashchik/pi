@@ -18,6 +18,8 @@ class PostAdmin extends AbstractAdmin
      */
     protected function configureFormFields(FormMapper $formMapper)
     {
+        $post = $formMapper->getFormBuilder()->getData();
+
         $formMapper
             ->with(
                 'Content',
@@ -42,7 +44,37 @@ class PostAdmin extends AbstractAdmin
                     'choice_label' => 'name',
                 ]
             )
-            ->end();
+            ->end()
+            ->with(
+                'Image',
+                [
+                    'class' => 'col-md-3'
+                ]
+            )
+            ->add('image', 'comur_image', array(
+                'uploadConfig' => array(
+                    'uploadUrl' => Post::UPLOAD_ROOT_DIR,
+                    'webDir' => Post::UPLOAD_DIR,
+                    'fileExt' => '*.jpg;*.gif;*.png;*.jpeg',
+                ),
+                'cropConfig' => array(
+                    'minWidth' => 588,
+                    'minHeight' => 300,
+                    'aspectRatio' => false,
+                    'cropRoute' => 'comur_api_crop',
+                    'forceResize' => true,
+                    'thumbs' => array(
+                        array(
+                            'maxWidth' => 200,
+                            'maxHeight' => 200,
+                            'useAsFieldImage' => true
+                        )
+                    )
+                )
+            ))
+            ->end()
+        ;
+
     }
 
     /**

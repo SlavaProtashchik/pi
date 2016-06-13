@@ -7,12 +7,15 @@ use Doctrine\ORM\Mapping as ORM;
  * Class Post
  * @package AppBundle\Entity
  *
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\PostRepository")
  * @ORM\Table(name="post")
  *
  */
 class Post
 {
+    const UPLOAD_DIR = 'media/post';
+    const UPLOAD_ROOT_DIR = __DIR__.'/../../../web/' . self::UPLOAD_DIR;
+
     /**
      * @ORM\Column(type="integer")
      * @ORM\Id
@@ -26,21 +29,26 @@ class Post
     protected $title;
 
     /**
-     * @ORM\Column(type="text")
+     * @ORM\Column(type="text", nullable=true)
      */
     protected $content;
 
     /**
      * @ORM\ManyToOne(targetEntity="Image")
-     * @ORM\JoinColumn(name="thumb", referencedColumnName="id")
+     * @ORM\JoinColumn(name="thumb", referencedColumnName="id", nullable=true)
      */
     protected $thumb;
 
     /**
      * @ORM\ManyToOne(targetEntity="Category")
-     * @ORM\JoinColumn(referencedColumnName="id")
+     * @ORM\JoinColumn(referencedColumnName="id", nullable=true)
      */
     protected $category;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    protected $image;
 
     /**
      * Get id
@@ -103,11 +111,11 @@ class Post
     /**
      * Set thumb
      *
-     * @param \AppBundle\Entity\Image $thumb
+     * @param Image $thumb
      *
      * @return Post
      */
-    public function setThumb(\AppBundle\Entity\Image $thumb = null)
+    public function setThumb(Image $thumb = null)
     {
         $this->thumb = $thumb;
 
@@ -117,7 +125,7 @@ class Post
     /**
      * Get thumb
      *
-     * @return \AppBundle\Entity\Image
+     * @return Image
      */
     public function getThumb()
     {
@@ -127,11 +135,11 @@ class Post
     /**
      * Set category
      *
-     * @param \AppBundle\Entity\Category $category
+     * @param Category $category
      *
      * @return Post
      */
-    public function setCategory(\AppBundle\Entity\Category $category = null)
+    public function setCategory(Category $category = null)
     {
         $this->category = $category;
 
@@ -141,10 +149,67 @@ class Post
     /**
      * Get category
      *
-     * @return \AppBundle\Entity\Category
+     * @return Category
      */
     public function getCategory()
     {
         return $this->category;
+    }
+
+    /**
+     * Set image
+     *
+     * @param string $image
+     *
+     * @return Post
+     */
+    public function setImage($image)
+    {
+        $this->image = $image;
+
+        return $this;
+    }
+
+    /**
+     * Get image
+     *
+     * @return string
+     */
+    public function getImage()
+    {
+        return $this->image;
+    }
+
+    /**
+     * @return string
+     */
+    public function getUploadRootDir()
+    {
+        // absolute path to your directory where images must be saved
+        return __DIR__.'/../../../../../web/'.$this->getUploadDir();
+    }
+
+    /**
+     * @return string
+     */
+    public function getUploadDir()
+    {
+        return 'uploads/post';
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getAbsolutePath()
+    {
+        return null === $this->image ? null : $this->getUploadRootDir().'/'.$this->image;
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getWebPath()
+    {
+        return null === $this->image ? null : '/'.$this->getUploadDir().'/'.$this->image;
     }
 }

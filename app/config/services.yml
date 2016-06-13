@@ -14,3 +14,26 @@ services:
         arguments: [~, AppBundle\Entity\Category, ~]
         tags:
             - { name: sonata.admin, manager_type: orm, label: Category }
+
+    app.repository.image:
+        class: AppBundle\Repository\ImageRepository
+        factory: ["@doctrine", getRepository]
+        arguments:
+            - AppBundle:Image
+
+    app.repository.post:
+        class: AppBundle\Repository\PostRepository
+        factory: ["@doctrine", getRepository]
+        arguments:
+            - AppBundle:Post
+
+    app.repository.category:
+        class: AppBundle\Repository\CategoryRepository
+        factory: ["@doctrine", getRepository]
+        arguments:
+            - AppBundle:Category
+
+    app.service.image:
+        class: AppBundle\Service\ImageService
+        arguments:
+            - '@app.repository.image'

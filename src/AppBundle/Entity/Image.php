@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
  * Class Image
  * @package AppBundle\Entity
  *
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\ImageRepository")
  * @ORM\Table(name="image")
  *
  * @method $this setId($value)
@@ -18,7 +18,7 @@ class Image
      * @ORM\Column(type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
-     */
+\     */
     protected $id;
 
     /**
