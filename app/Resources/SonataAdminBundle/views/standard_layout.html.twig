@@ -103,7 +103,7 @@ file that was distributed with this source code.
 <body {% block body_attributes %}class="sonata-bc skin-black fixed"{% endblock %}>
 <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
 <script src="{{ path('fos_js_routing_js', {"callback": "fos.Router.setData"}) }}"></script>
-{% include "ComurImageBundle:Form:croppable_image_modal.html.twig" %}
+{% include "ComurImageBundle:Form:croppable_image_modal.html.twig" with {'include_jquery': false, 'include_bootstrap': false} %}
 <div class="wrapper">
 
     {% block sonata_header %}

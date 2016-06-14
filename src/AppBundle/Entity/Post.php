@@ -34,12 +34,6 @@ class Post
     protected $content;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Image")
-     * @ORM\JoinColumn(name="thumb", referencedColumnName="id", nullable=true)
-     */
-    protected $thumb;
-
-    /**
      * @ORM\ManyToOne(targetEntity="Category")
      * @ORM\JoinColumn(referencedColumnName="id", nullable=true)
      */

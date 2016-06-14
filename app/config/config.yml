@@ -44,11 +44,17 @@ doctrine:
         path:     "%database_path%"
 
         charset:  UTF8
+        types:
+            json: Sonata\Doctrine\Types\JsonType
 
     orm:
         auto_generate_proxy_classes: "%kernel.debug%"
         naming_strategy: doctrine.orm.naming_strategy.underscore
         auto_mapping: true
+        mappings:
+            #ApplicationSonataUserBundle: ~
+            SonataUserBundle: ~
+            FOSUserBundle: ~
 
 doctrine_migrations:
     dir_name: "%kernel.root_dir%/DoctrineMigrations"
@@ -67,9 +73,11 @@ swiftmailer:
 sonata_block:
     default_contexts: [cms]
     blocks:
-        # enable the SonataAdminBundle block
         sonata.admin.block.admin_list:
             contexts: [admin]
+        sonata.user.block.menu:
+        sonata.user.block.account:
+        sonata.block.service.text:
 
 comur_image:
     config:
@@ -80,3 +88,23 @@ comur_image:
         translation_domain: 'ComurImageBundle'
         gallery_thumb_size: 150
         gallery_dir: 'gallery'
+
+sonata_user:
+    security_acl: true
+    manager_type: orm
+    class:
+        user: AppBundle\Entity\Security\User
+        group: AppBundle\Entity\Security\UserGroup
+
+fos_user:
+    db_driver:      orm
+    firewall_name:  main
+    user_class:     AppBundle\Entity\Security\User
+
+
+    group:
+        group_class:   AppBundle\Entity\Security\UserGroup
+        group_manager: sonata.user.orm.group_manager
+
+    service:
+        user_manager: sonata.user.orm.user_manager

@@ -18,8 +18,6 @@ class PostAdmin extends AbstractAdmin
      */
     protected function configureFormFields(FormMapper $formMapper)
     {
-        $post = $formMapper->getFormBuilder()->getData();
-
         $formMapper
             ->with(
                 'Content',
