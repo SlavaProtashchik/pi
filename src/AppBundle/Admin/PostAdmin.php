@@ -2,10 +2,13 @@
 namespace AppBundle\Admin;
 
 use AppBundle\Entity\Post;
+use AppBundle\Entity\Security\User;
+use Doctrine\ORM\QueryBuilder;
 use Sonata\AdminBundle\Admin\AbstractAdmin;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Form\FormMapper;
+use Sonata\DoctrineORMAdminBundle\Datagrid\ProxyQuery;
 
 /**
  * Class PostAdmin
@@ -13,6 +16,12 @@ use Sonata\AdminBundle\Form\FormMapper;
  */
 class PostAdmin extends AbstractAdmin
 {
+    public function __construct($code, $class, $baseControllerName)
+    {
+        parent::__construct($code, $class, $baseControllerName);
+        $this->pagerType = 'Blog';
+    }
+
     /**
      * @param FormMapper $formMapper
      */
@@ -105,5 +114,62 @@ class PostAdmin extends AbstractAdmin
     public function toString($post)
     {
         return $post->getTitle();
+    }
+
+    public function isGranted($name, $object = null)
+    {
+        $isGranted = parent::isGranted($name, $object);
+
+        if (!$isGranted) {
+            return $isGranted;
+        }
+
+        if (parent::isGranted('ROLE_ADMIN') || is_null($object) || $name =='CREATE') {
+            return $isGranted;
+        }
+
+        if ($object instanceof Post && $this->getCurrentUser() != $object->getCreatedBy()) {
+            return false;
+        }
+
+        return $isGranted;
+    }
+
+    /**
+     * @return User
+     */
+    private function getCurrentUser()
+    {
+        return $this->getConfigurationPool()->getContainer()->get('security.token_storage')->getToken()->getUser();
+    }
+
+    /**
+     * @param Post $object
+     */
+    public function prePersist($object)
+    {
+        parent::prePersist($object);
+        $object->setCreatedBy($this->getCurrentUser());
+    }
+
+    public function createQuery($context = 'list')
+    {
+        /** @var ProxyQuery $query */
+        $query = parent::createQuery($context);
+
+        if (!$this->isGranted('ROLE_ADMIN')) {
+            /** @var QueryBuilder $queryBuilder */
+            $queryBuilder = $query->getQueryBuilder();
+            $alias = $queryBuilder->getRootAliases();
+            $queryBuilder->andWhere(
+                $queryBuilder->expr()->eq(
+                    $alias['0'] . '.createdBy',
+                    ':user'
+                )
+            )
+            ->setParameter('user', $this->getCurrentUser());
+        }
+
+        return $query;
     }
 }

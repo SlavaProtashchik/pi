@@ -90,7 +90,6 @@ comur_image:
         gallery_dir: 'gallery'
 
 sonata_user:
-    security_acl: true
     manager_type: orm
     class:
         user: AppBundle\Entity\Security\User
@@ -108,3 +107,7 @@ fos_user:
 
     service:
         user_manager: sonata.user.orm.user_manager
+
+sonata_admin:
+    security:
+        handler: sonata.admin.security.handler.role

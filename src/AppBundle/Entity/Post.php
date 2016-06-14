@@ -11,10 +11,12 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="post")
  *
  */
-class Post
+class Post implements UserCreatedInterface
 {
     const UPLOAD_DIR = 'media/post';
     const UPLOAD_ROOT_DIR = __DIR__.'/../../../web/' . self::UPLOAD_DIR;
+
+    use UserCreatedTrait;
 
     /**
      * @ORM\Column(type="integer")
@@ -100,30 +102,6 @@ class Post
     public function getContent()
     {
         return $this->content;
-    }
-
-    /**
-     * Set thumb
-     *
-     * @param Image $thumb
-     *
-     * @return Post
-     */
-    public function setThumb(Image $thumb = null)
-    {
-        $this->thumb = $thumb;
-
-        return $this;
-    }
-
-    /**
-     * Get thumb
-     *
-     * @return Image
-     */
-    public function getThumb()
-    {
-        return $this->thumb;
     }
 
     /**

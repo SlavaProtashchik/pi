@@ -8,18 +8,12 @@ services:
         class: AppBundle\Admin\PostAdmin
         arguments: [~, AppBundle\Entity\Post, ~]
         tags:
-            - { name: sonata.admin, manager_type: orm, label: Post }
+            - { name: sonata.admin, manager_type: orm, label: Post, group: blog, group_label: Blog }
     admin.category:
         class: AppBundle\Admin\CategoryAdmin
         arguments: [~, AppBundle\Entity\Category, ~]
         tags:
-            - { name: sonata.admin, manager_type: orm, label: Category }
-
-    app.repository.image:
-        class: AppBundle\Repository\ImageRepository
-        factory: ["@doctrine", getRepository]
-        arguments:
-            - AppBundle:Image
+            - { name: sonata.admin, manager_type: orm, label: Category, group: blog }
 
     app.repository.post:
         class: AppBundle\Repository\PostRepository
@@ -32,8 +26,3 @@ services:
         factory: ["@doctrine", getRepository]
         arguments:
             - AppBundle:Category
-
-    app.service.image:
-        class: AppBundle\Service\ImageService
-        arguments:
-            - '@app.repository.image'
