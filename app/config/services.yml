@@ -8,12 +8,12 @@ services:
         class: AppBundle\Admin\PostAdmin
         arguments: [~, AppBundle\Entity\Post, ~]
         tags:
-            - { name: sonata.admin, manager_type: orm, label: Post, group: blog, group_label: Blog }
+            - { name: sonata.admin, manager_type: orm, label: All Posts, group: blog }
     admin.category:
         class: AppBundle\Admin\CategoryAdmin
         arguments: [~, AppBundle\Entity\Category, ~]
         tags:
-            - { name: sonata.admin, manager_type: orm, label: Category, group: blog }
+            - { name: sonata.admin, manager_type: orm, label: Categories, group: blog }
 
     app.repository.post:
         class: AppBundle\Repository\PostRepository

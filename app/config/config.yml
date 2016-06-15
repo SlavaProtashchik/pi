@@ -2,6 +2,7 @@ imports:
     - { resource: parameters.yml }
     - { resource: security.yml }
     - { resource: services.yml }
+    - { resource: twig.yml }
 
 # Put parameters here that don't need to change on each machine where the app is deployed
 # http://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
@@ -32,10 +33,6 @@ framework:
     http_method_override: true
     assets: ~
 
-# Twig Configuration
-twig:
-    debug:            "%kernel.debug%"
-    strict_variables: "%kernel.debug%"
 
 # Doctrine Configuration
 doctrine:
@@ -111,3 +108,24 @@ fos_user:
 sonata_admin:
     security:
         handler: sonata.admin.security.handler.role
+    templates:
+            layout:  SonataAdminBundle::layout.html.twig
+    dashboard:
+        groups:
+            blog:
+                label:                Posts
+                label_catalogue:      Categories
+                icon:                 '<i class="fa fa-wordpress" aria-hidden="true"></i>'
+                items:
+                    - admin.post
+                    - route: sonata_post_create
+                      label: Create
+                    - admin.category
+
+            users:
+                label:                Users
+                label_catalogue:      Users
+                icon:                 '<i class="fa fa-users"></i>'
+                items:
+                    - sonata.user.admin.user
+                    - sonata.user.admin.group

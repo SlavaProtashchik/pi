@@ -16,6 +16,8 @@ use Sonata\DoctrineORMAdminBundle\Datagrid\ProxyQuery;
  */
 class PostAdmin extends AbstractAdmin
 {
+    protected $baseRouteName = 'sonata_post';
+
     public function __construct($code, $class, $baseControllerName)
     {
         parent::__construct($code, $class, $baseControllerName);
@@ -35,7 +37,13 @@ class PostAdmin extends AbstractAdmin
                 ]
             )
             ->add('title', 'text')
-            ->add('content', 'textarea')
+            ->add(
+                'content',
+                'sonata_simple_formatter_type',
+                [
+                    'format' => 'richhtml'
+                ]
+            )
             ->end()
             ->with(
                 'Category',
@@ -58,29 +66,29 @@ class PostAdmin extends AbstractAdmin
                     'class' => 'col-md-3'
                 ]
             )
-            ->add('image', 'comur_image', array(
-                'uploadConfig' => array(
+            ->add('image', 'comur_image', [
+                'required' => false,
+                'uploadConfig' => [
                     'uploadUrl' => Post::UPLOAD_ROOT_DIR,
                     'webDir' => Post::UPLOAD_DIR,
                     'fileExt' => '*.jpg;*.gif;*.png;*.jpeg',
-                ),
-                'cropConfig' => array(
+                ],
+                'cropConfig' => [
                     'minWidth' => 588,
                     'minHeight' => 300,
                     'aspectRatio' => false,
                     'cropRoute' => 'comur_api_crop',
                     'forceResize' => true,
-                    'thumbs' => array(
-                        array(
+                    'thumbs' => [
+                        [
                             'maxWidth' => 200,
                             'maxHeight' => 200,
                             'useAsFieldImage' => true
-                        )
-                    )
-                )
-            ))
-            ->end()
-        ;
+                        ]
+                    ]
+                ]
+            ])
+            ->end();
 
     }
 
@@ -124,7 +132,7 @@ class PostAdmin extends AbstractAdmin
             return $isGranted;
         }
 
-        if (parent::isGranted('ROLE_ADMIN') || is_null($object) || $name =='CREATE') {
+        if (parent::isGranted('ROLE_ADMIN') || is_null($object) || $name == 'CREATE') {
             return $isGranted;
         }
 
@@ -167,7 +175,7 @@ class PostAdmin extends AbstractAdmin
                     ':user'
                 )
             )
-            ->setParameter('user', $this->getCurrentUser());
+                ->setParameter('user', $this->getCurrentUser());
         }
 
         return $query;
